@@ -23,6 +23,8 @@
     "watch": "^1.0.2",
     "watch-run": "^1.2.5",
     "webpack": "^2.2.1",
-    "webpack-bundle-analyzer": "^2.3.1"
+    "webpack-bundle-analyzer": "^2.3.1",
+    "todomvc-app-css": "^2.0.0",
+    "todomvc-common": "^1.0.0"
   }
 }
