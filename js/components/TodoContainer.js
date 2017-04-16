@@ -30,15 +30,15 @@ function view(state, component) {
     let todoItems = [];
 
     console.log(state);
-    state.todoItems.forEach( () => {
-        let todoItemComponent = new TodoItemComponent(component.eventStore, guid()).render({
-            content: '',
+    state.todoItems.forEach( (content) => {
+        let todoItemComponent = new TodoItemComponent(component.eventStore, guid())
+
+        todoItemComponent.subscribe('sync', 'todo.toggle.completed');
+
+        todoItems.push(todoItemComponent.render({
+            content: content,
             completed: false
-        });
-
-        todoItemComponent.subscribe('todo.toggle');
-
-        todoItems.push(todoItemComponent);
+        }));
     });
 
     return h('section.main', [
@@ -47,6 +47,7 @@ function view(state, component) {
         h('ul.todo-list', todoItems)
     ]);
 }
+
 function updateDom(container, newVnode) {
     "use strict";
 
@@ -82,7 +83,7 @@ export default class TodoContainerComponent {
     }
 
     render(state) {
-        const newVnode = view(state);
+        const newVnode = view(state, this);
         this.container = updateDom(this.container, newVnode);
 
         return this.container;
@@ -90,7 +91,7 @@ export default class TodoContainerComponent {
 
     reduce(events) {
         return events.reduce(function(state, event){
-            state.todoItems.push(event.data.text);
+            state.todoItems.push(event.data.content);
 
             return state;
         }, {

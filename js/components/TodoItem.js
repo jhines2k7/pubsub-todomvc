@@ -2,33 +2,45 @@ let snabbdom = require('snabbdom');
 
 let patch = snabbdom.init([ // Init patch function with chosen modules
     require('snabbdom/modules/class').default, // makes it easy to toggle classes
-    require('snabbdom/modules/props').default, // for setting properties on DOM elements
-    require('snabbdom/modules/style').default, // handles styling on elements with support for animations
-    require('snabbdom/modules/attributes').default
+    require('snabbdom/modules/attributes').default,
+    require('snabbdom/modules/eventlisteners').default
 ]);
 
 let h = require('snabbdom/h').default; // helper function for creating vnodes
 
-function view(state) {
+import postal from 'postal/lib/postal.lodash'
+
+function view(state, component) {
     "use strict";
 
-    return h('li', [
+    return h('li', {class: {toggle: state.completed}}, [
         h('div.view', [
-            h('input.toggle', {attrs: {type: 'checkbox'}}),
+            h('input.toggle', {attrs: {type: 'checkbox'}, on: {click: clickHandler.bind(null, component)}}),
             h('label', state.content),
             h('button.destroy')
         ])
     ]);
 }
 
+function clickHandler(component) {
+    let todoToggleCompletedEvent = {
+        channel: "sync",
+        topic: "todo.toggle.completed",
+        eventType: 'click',
+        data: {
+            id: component.id,
+            completed: true
+        }
+    };
+
+    component.publish(todoToggleCompletedEvent);
+}
+
 export default class TodoItemComponent {
     constructor(eventStore, id) {
         this.id = id;
         this.eventStore = eventStore;
-    }
-
-    render(state) {
-        return patch(view(state), view(state));
+        this.subscriptions = {};
     }
 
     subscribe(channel, topic) {
@@ -49,12 +61,21 @@ export default class TodoItemComponent {
         return subscription;
     }
 
+    render(state) {
+        return patch(view(state, this), view(state, this));
+    }
+
     reduce(events) {
         return events.reduce(function(state, event){
-            state.content = event.data.content;
-            state.completed = event.data.completed;
+            if(event.topic === 'todo.toggle.completed' && event.data.id === this.id) {
+                state.completed = event.data.completed;
 
-            return state;
+                return state;
+            } else {
+                state.content = event.data.content;
+
+                return state;
+            }
         }, {
             content: '',
             completed: false
