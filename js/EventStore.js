@@ -6,7 +6,6 @@ export default class EventStore {
     }
 
     filter(subscriptions) {
-        //this._eventStore.filter(isEventForComponent(this._subscriptions));
         return this.events.filter(isEventForComponent(subscriptions));
     }
 
