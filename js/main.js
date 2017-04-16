@@ -12,7 +12,5 @@ headerComponent.render();
 let todoContainerComponent = new TodoContainerComponent(document.getElementById('main'), eventStore);
 todoContainerComponent.subscribe('sync', 'todo.add');
 
-/*todoContainerComponent.render({todoItems: []});
-
-let todoContainerFooter = new TodoContainerFooter(document.getElementById('footer'));
-todoContainerFooter.render();*/
+let todoContainerFooter = new TodoContainerFooter(document.getElementById('footer'), eventStore);
+todoContainerFooter.subscribe('sync', 'todo.add');

@@ -9,6 +9,8 @@ let patch = snabbdom.init([ // Init patch function with chosen modules
 
 let h = require('snabbdom/h').default; // helper function for creating vnodes
 
+import postal from 'postal/lib/postal.lodash'
+
 function view() {
     "use strict";
 
@@ -27,8 +29,28 @@ function view() {
 }
 
 export default class TodoContainerFooter {
-    constructor(container) {
+    constructor(container, eventStore) {
         this.container = container;
+        this.eventStore = eventStore;
+        this.subscriptions = {};
+    }
+
+    subscribe(channel, topic) {
+        let subscription = postal.subscribe({
+            channel: channel,
+            topic: topic,
+            callback: function(data, envelope) {
+                let events = this.eventStore.filter(this.subscriptions);
+
+                if(events.length > 0) {
+                    this.render();
+                }
+            }.bind(this)
+        });
+
+        this.subscriptions[topic] = subscription;
+
+        return subscription;
     }
 
     render() {
