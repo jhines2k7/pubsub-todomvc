@@ -11,26 +11,66 @@ let patch = snabbdom.init([ // Init patch function with chosen modules
 
 let h = require('snabbdom/h').default; // helper function for creating vnodes
 
-function view() {
+import postal from 'postal/lib/postal.lodash'
+
+function view(state) {
     "use strict";
 
-    let todoItem = new TodoItemComponent();
+    let todos = [];
+
+    state.todoItems.forEach( (todoItem) => {
+        todos.push(new TodoItemComponent(todoItem).render());
+    });
 
     return h('section.main', [
         h('input.toggle-all', {attrs: {type: 'checkbox'}}),
         h('label', {attrs: {for: 'toggle-all'}}, 'Mark all as complete'),
-        h('ul.todo-list', [
-            todoItem.render()
-        ])
+        h('ul.todo-list', todos)
     ]);
+}
+function updateDom(container, newVnode) {
+    "use strict";
+
+    return patch(container, newVnode);
 }
 
 export default class TodoContainerComponent {
-    constructor(container) {
+    constructor(container, eventStore) {
         this.container = container;
+        this.eventStore = eventStore;
+        this.subscriptions = {};
     }
 
-    render() {
-        return patch(this.container , view());
+    subscribe(channel, topic) {
+        let subscription = postal.subscribe({
+            channel: channel,
+            topic: topic,
+            callback: function(data, envelope) {
+                let events = this.eventStore.filter(this.subscriptions);
+
+                let reducedState = this.reduce(events);
+
+                this.render(reducedState);
+            }.bind(this)
+        });
+
+        this.subscriptions[topic] = subscription;
+
+        return subscription;
+    }
+
+    render(state) {
+        const newVnode = view(state);
+        this.container = updateDom(this.container, newVnode);
+
+        return this.container;
+    }
+
+    reduce(events) {
+        return events.reduce( (state, event) => {
+            state.todoItems.push(event.data.text)
+        }, {
+            todoItems: []
+        });
     }
 }

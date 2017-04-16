@@ -9,24 +9,24 @@ let patch = snabbdom.init([ // Init patch function with chosen modules
 
 let h = require('snabbdom/h').default; // helper function for creating vnodes
 
-function view() {
+function view(todoItemText) {
     "use strict";
 
     return h('li', [
         h('div.view', [
             h('input.toggle', {attrs: {type: 'checkbox'}}),
-            h('label', 'Buy a unicorn'),
+            h('label', todoItemText),
             h('button.destroy')
         ])
     ]);
 }
 
 export default class TodoItemComponent {
-    /*constructor(container) {
-        this.container = container;
-    }*/
+    constructor(todoItemText) {
+        this.todoItemText = todoItemText;
+    }
 
     render() {
-        return patch(view(), view());
+        return patch(view(), view(this.todoItemText));
     }
 }
