@@ -21,15 +21,15 @@ function view() {
             h('li', [h('a', {props: {href: '#/active'}}, 'Active')]),
             h('li', [h('a', {props: {href: '#/completed'}}, 'Completed')])
         ]),
-        // Hidden if no completed items are left ↓ -->
+        // Hidden if no completed items are left
         h('button.clear-completed', 'Clear completed')
     ]);
 }
 
 export default class TodoContainerFooter {
     constructor(container) {
-     this.container = container;
-     }
+        this.container = container;
+    }
 
     render() {
         return patch(this.container, view());
