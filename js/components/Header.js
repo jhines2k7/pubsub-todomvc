@@ -11,9 +11,9 @@ let h = require('snabbdom/h').default; // helper function for creating vnodes
 function view() {
     "use strict";
 
-    return h('div', [
+    return h('header.header', [
         h('h1', 'todos'),
-        h('input', {class: 'new-todo', props: {placeholder: 'What needs to be done?'}})
+        h('input.new-todo', {props: {placeholder: 'What needs to be done?'}})
     ]);
 }
 
