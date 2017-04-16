@@ -22,11 +22,11 @@ function view() {
 }
 
 export default class TodoItemComponent {
-    constructor(container) {
+    /*constructor(container) {
         this.container = container;
-    }
+    }*/
 
     render() {
-        return patch(this.container, view());
+        return patch(view(), view());
     }
 }
