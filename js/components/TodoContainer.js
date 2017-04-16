@@ -51,7 +51,10 @@ export default class TodoContainerComponent {
 
                 let reducedState = this.reduce(events);
 
-                this.render(reducedState);
+                if(events.length > 0) {
+                    this.render(reducedState);
+                }
+
             }.bind(this)
         });
 
