@@ -12,16 +12,16 @@ let h = require('snabbdom/h').default; // helper function for creating vnodes
 function view() {
     "use strict";
 
-    return h('section.main', [
-        h('input.toggle-all', {attrs: {type: 'checkbox'}}),
-        h('label', {attrs: {for: 'toggle-all'}}, 'Mark all as complete'),
-        h('ul.todo-list', [
-
+    return h('li', [
+        h('div.view', [
+            h('input.toggle', {attrs: {type: 'checkbox'}}),
+            h('label', 'Buy a unicorn'),
+            h('button.destroy')
         ])
     ]);
 }
 
-export default class TodoContainerComponent {
+export default class TodoItemComponent {
     constructor(container) {
         this.container = container;
     }
