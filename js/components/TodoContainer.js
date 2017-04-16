@@ -13,20 +13,38 @@ let h = require('snabbdom/h').default; // helper function for creating vnodes
 
 import postal from 'postal/lib/postal.lodash'
 
-function view(state) {
+function guid() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+
+function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+}
+
+function view(state, component) {
     "use strict";
 
-    let todos = [];
+    let todoItems = [];
 
     console.log(state);
-    state.todoItems.forEach( (todoItem) => {
-        todos.push(new TodoItemComponent(todoItem).render());
+    state.todoItems.forEach( () => {
+        let todoItemComponent = new TodoItemComponent(component.eventStore, guid()).render({
+            content: '',
+            completed: false
+        });
+
+        todoItemComponent.subscribe('todo.toggle');
+
+        todoItems.push(todoItemComponent);
     });
 
     return h('section.main', [
         h('input.toggle-all', {attrs: {type: 'checkbox'}}),
         h('label', {attrs: {for: 'toggle-all'}}, 'Mark all as complete'),
-        h('ul.todo-list', todos)
+        h('ul.todo-list', todoItems)
     ]);
 }
 function updateDom(container, newVnode) {

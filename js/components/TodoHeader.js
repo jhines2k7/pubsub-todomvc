@@ -23,9 +23,7 @@ function keyUpHandler(component, event) {
     "use strict";
 
     if(event.keyCode === 13) {
-        console.log(event.currentTarget.value);
-
-        let todoText = event.currentTarget.value;
+        let todoContent = event.currentTarget.value;
         event.currentTarget.value = '';
 
         let addTodoEvent = {
@@ -33,7 +31,7 @@ function keyUpHandler(component, event) {
             topic: "todo.add",
             eventType: 'keyup',
             data: {
-                text: todoText
+                content: todoContent
             }
         };
 
