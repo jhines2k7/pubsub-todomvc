@@ -27,6 +27,6 @@ export default class TodoItemComponent {
     }
 
     render() {
-        return patch(view(), view(this.todoItemText));
+        return patch(view(this.todoItemText), view(this.todoItemText));
     }
 }

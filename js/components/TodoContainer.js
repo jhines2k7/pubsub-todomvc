@@ -18,6 +18,7 @@ function view(state) {
 
     let todos = [];
 
+    console.log(state);
     state.todoItems.forEach( (todoItem) => {
         todos.push(new TodoItemComponent(todoItem).render());
     });
@@ -67,8 +68,10 @@ export default class TodoContainerComponent {
     }
 
     reduce(events) {
-        return events.reduce( (state, event) => {
-            state.todoItems.push(event.data.text)
+        return events.reduce(function(state, event){
+            state.todoItems.push(event.data.text);
+
+            return state;
         }, {
             todoItems: []
         });

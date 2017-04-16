@@ -9,7 +9,7 @@ let headerComponent = new HeaderComponent(document.getElementById('header'), eve
 headerComponent.render();
 
 let todoContainerComponent = new TodoContainerComponent(document.getElementById('main'), eventStore);
-todoContainerComponent.subscribe('keyup', 'todo.add');
+todoContainerComponent.subscribe('sync', 'todo.add');
 todoContainerComponent.render({todoItems: []});
 
 let todoContainerFooter = new TodoContainerFooter(document.getElementById('footer'));
