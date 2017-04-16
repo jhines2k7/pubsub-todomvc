@@ -22,17 +22,32 @@ function view(component) {
 function keyUpHandler(component, event) {
     "use strict";
 
-    //e.which = e.which || e.keyCode;
-    if(event.keyCode == 13) {
+    if(event.keyCode === 13) {
         console.log(event.currentTarget.value);
 
         event.currentTarget.value = '';
+
+        let addTodoEvent = {
+            channel: "sync",
+            topic: "todo.add",
+            eventType: 'keyup',
+            data: {
+                text: event.currentTarget.value
+            }
+        };
+
+        component.publish(addTodoEvent);
     }
 }
 
 export default class HeaderComponent {
-    constructor(container) {
+    constructor(container, eventStore) {
         this.container = container;
+        this.eventStore = eventStore;
+    }
+
+    publish(event) {
+        this.eventStore.add(event);
     }
 
     render() {

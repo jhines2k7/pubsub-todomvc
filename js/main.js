@@ -1,4 +1,4 @@
-import HeaderComponent from './components/Header'
+import HeaderComponent from './components/TodoHeader'
 import TodoContainerComponent from './components/TodoContainer'
 import TodoContainerFooter from './components/TodoContainerFooter'
 
