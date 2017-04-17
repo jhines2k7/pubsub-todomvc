@@ -16,7 +16,7 @@ function view(state, component) {
     "use strict";
 
     // need to figure out why class toggling is not working correctly
-    let vnode;
+    /*let vnode;
 
     let viewContent =  h('div.view', [
         h('input.toggle', {attrs: {type: 'checkbox', checked: state.checked}, on: {click: clickHandler.bind(this, component, state.checked)}}),
@@ -28,9 +28,15 @@ function view(state, component) {
         vnode = h('li', viewContent);
     } else {
         vnode = h('li.completed', viewContent);
-    }
+    }*/
 
-    return vnode;
+    return h('li', {class: {completed: state.completed}}, [
+        h('div.view', [
+            h('input.toggle', {attrs: {type: 'checkbox', checked: state.checked}, on: {click: clickHandler.bind(this, component, state.checked)}}),
+            h('label', {attrs: {id: component.id}}, state.content),
+            h('button.destroy')
+        ])
+    ]);
 }
 
 function clickHandler(component, checked) {
