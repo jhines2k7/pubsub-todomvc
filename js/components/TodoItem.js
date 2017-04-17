@@ -80,6 +80,10 @@ export default class TodoItemComponent {
         return subscription;
     }
 
+    publish(event) {
+        this.eventStore.add(event);
+    }
+
     render(state) {
         //return patch(this.elm, view(state, this));
         const newVnode = view(state, this);
