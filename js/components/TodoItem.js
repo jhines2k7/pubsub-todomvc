@@ -19,7 +19,7 @@ function view(state, component) {
     let vnode;
 
     let viewContent =  h('div.view', [
-        h('input.toggle', {attrs: {type: 'checkbox'}, on: {input: clickHandler.bind(null, component)}}),
+        h('input.toggle', {attrs: {type: 'checkbox'}, on: {click: clickHandler.bind(this, component)}}),
         h('label', state.content),
         h('button.destroy')
     ]);
@@ -34,6 +34,7 @@ function view(state, component) {
 }
 
 function clickHandler(component) {
+    console.log('Someone clicked a todo item!');
     let todoToggleCompletedEvent = {
         channel: "sync",
         topic: "todo.toggle.completed",
