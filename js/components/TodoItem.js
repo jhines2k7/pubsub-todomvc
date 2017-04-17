@@ -20,7 +20,7 @@ function view(state, component) {
 
     let viewContent =  h('div.view', [
         h('input.toggle', {attrs: {type: 'checkbox'}, on: {click: clickHandler.bind(this, component)}}),
-        h('label', state.content),
+        h('label', {attrs: {id: component.id}}, state.content),
         h('button.destroy')
     ]);
 
@@ -35,12 +35,14 @@ function view(state, component) {
 
 function clickHandler(component) {
     console.log('Someone clicked a todo item!');
+    let id = component.id;
     let todoToggleCompletedEvent = {
         channel: "sync",
         topic: "todo.toggle.completed",
         eventType: 'click',
         data: {
-            id: component.id,
+            id: id,
+            content: document.getElementById(id).innerText,
             completed: true
         }
     };
@@ -96,6 +98,7 @@ export default class TodoItemComponent {
         return events.reduce(function(state, event){
             if(event.topic === 'todo.toggle.completed' && event.data.id === this.id) {
                 state.completed = event.data.completed;
+                state.content = event.data.content;
 
                 return state;
             } else {
@@ -103,7 +106,7 @@ export default class TodoItemComponent {
 
                 return state;
             }
-        }, {
+        }.bind(this), {
             content: '',
             completed: false
         });
