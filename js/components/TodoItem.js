@@ -2,6 +2,8 @@ let snabbdom = require('snabbdom');
 
 let patch = snabbdom.init([ // Init patch function with chosen modules
     require('snabbdom/modules/class').default, // makes it easy to toggle classes
+    require('snabbdom/modules/props').default, // for setting properties on DOM elements
+    require('snabbdom/modules/style').default, // handles styling on elements with support for animations
     require('snabbdom/modules/attributes').default,
     require('snabbdom/modules/eventlisteners').default
 ]);
@@ -13,23 +15,19 @@ import postal from 'postal/lib/postal.lodash'
 function view(state, component) {
     "use strict";
 
+    // need to figure out why class toggling is not working correctly
     let vnode;
+
+    let viewContent =  h('div.view', [
+        h('input.toggle', {attrs: {type: 'checkbox'}, on: {input: clickHandler.bind(null, component)}}),
+        h('label', state.content),
+        h('button.destroy')
+    ]);
+
     if(!state.completed) {
-        vnode = h('li', [
-            h('div.view', [
-                h('input.toggle', {attrs: {type: 'checkbox'}, on: {click: clickHandler.bind(null, component)}}),
-                h('label', state.content),
-                h('button.destroy')
-            ])
-        ]);
+        vnode = h('li', [viewContent]);
     } else {
-        vnode = h('li.completed', [
-            h('div.view', [
-                h('input.toggle', {attrs: {type: 'checkbox'}, on: {click: clickHandler.bind(null, component)}}),
-                h('label', state.content),
-                h('button.destroy')
-            ])
-        ]);
+        vnode = h('li.completed', [viewContent]);
     }
 
     return vnode;
@@ -54,6 +52,7 @@ export default class TodoItemComponent {
         this.id = id;
         this.eventStore = eventStore;
         this.subscriptions = {};
+        this.elm = document.createElement('li');
     }
 
     subscribe(channel, topic) {
@@ -75,7 +74,7 @@ export default class TodoItemComponent {
     }
 
     render(state) {
-        return patch(view(state, this), view(state, this));
+        return patch(this.elm, view(state, this));
     }
 
     reduce(events) {

@@ -22,7 +22,7 @@ function view(component) {
 function keyUpHandler(component, event) {
     "use strict";
 
-    if(event.keyCode === 13) {
+    if(event.keyCode === 13 && event.currentTarget.value !== '') {
         let todoContent = event.currentTarget.value;
         event.currentTarget.value = '';
 

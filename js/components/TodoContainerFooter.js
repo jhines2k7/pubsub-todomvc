@@ -4,7 +4,8 @@ let patch = snabbdom.init([ // Init patch function with chosen modules
     require('snabbdom/modules/class').default, // makes it easy to toggle classes
     require('snabbdom/modules/props').default, // for setting properties on DOM elements
     require('snabbdom/modules/style').default, // handles styling on elements with support for animations
-    require('snabbdom/modules/attributes').default
+    require('snabbdom/modules/attributes').default,
+    require('snabbdom/modules/eventlisteners').default
 ]);
 
 let h = require('snabbdom/h').default; // helper function for creating vnodes
@@ -19,13 +20,17 @@ function view() {
             h('strong', '0 items left')
         ]),
         h('ul.filters', [
-            h('li', [h('a.selected', {props: {href: '#/'}}, 'All')]),
+            h('li', [h('a.selected', {props: {href: '#/'}, on: {click: clickHandler.bind(null)}}, 'All')]),
             h('li', [h('a', {props: {href: '#/active'}}, 'Active')]),
             h('li', [h('a', {props: {href: '#/completed'}}, 'Completed')])
         ]),
         // Hidden if no completed items are left
         h('button.clear-completed', 'Clear completed')
     ]);
+}
+
+function clickHandler(component) {
+    console.log('Someone clicked me!');
 }
 
 export default class TodoContainerFooter {
