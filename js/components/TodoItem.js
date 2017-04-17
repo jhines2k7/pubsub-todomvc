@@ -25,9 +25,9 @@ function view(state, component) {
     ]);
 
     if(!state.completed) {
-        vnode = h('li', [viewContent]);
+        vnode = h('li', viewContent);
     } else {
-        vnode = h('li.completed', [viewContent]);
+        vnode = h('li.completed', viewContent);
     }
 
     return vnode;
@@ -45,6 +45,12 @@ function clickHandler(component) {
     };
 
     component.publish(todoToggleCompletedEvent);
+}
+
+function updateDom(container, newVnode) {
+    "use strict";
+
+    return patch(container, newVnode);
 }
 
 export default class TodoItemComponent {
@@ -74,7 +80,11 @@ export default class TodoItemComponent {
     }
 
     render(state) {
-        return patch(this.elm, view(state, this));
+        //return patch(this.elm, view(state, this));
+        const newVnode = view(state, this);
+        this.elm = updateDom(this.elm, newVnode);
+
+        return this.elm;
     }
 
     reduce(events) {

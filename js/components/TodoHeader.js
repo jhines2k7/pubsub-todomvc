@@ -19,6 +19,12 @@ function view(component) {
     ]);
 }
 
+function updateDom(container, newVnode) {
+    "use strict";
+
+    return patch(container, newVnode);
+}
+
 function keyUpHandler(component, event) {
     "use strict";
 
@@ -50,6 +56,10 @@ export default class HeaderComponent {
     }
 
     render() {
-        return patch(this.container, view(this));
+        //return patch(this.container, view(this));
+        const newVnode = view(this);
+        this.container = updateDom(this.container, newVnode);
+
+        return this.container;
     }
 }
