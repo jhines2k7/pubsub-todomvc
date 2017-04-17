@@ -13,13 +13,26 @@ import postal from 'postal/lib/postal.lodash'
 function view(state, component) {
     "use strict";
 
-    return h('li', {class: {toggle: state.completed}}, [
-        h('div.view', [
-            h('input.toggle', {attrs: {type: 'checkbox'}, on: {click: clickHandler.bind(null, component)}}),
-            h('label', state.content),
-            h('button.destroy')
-        ])
-    ]);
+    let vnode;
+    if(!state.completed) {
+        vnode = h('li', [
+            h('div.view', [
+                h('input.toggle', {attrs: {type: 'checkbox'}, on: {click: clickHandler.bind(null, component)}}),
+                h('label', state.content),
+                h('button.destroy')
+            ])
+        ]);
+    } else {
+        vnode = h('li.completed', [
+            h('div.view', [
+                h('input.toggle', {attrs: {type: 'checkbox'}, on: {click: clickHandler.bind(null, component)}}),
+                h('label', state.content),
+                h('button.destroy')
+            ])
+        ]);
+    }
+
+    return vnode;
 }
 
 function clickHandler(component) {

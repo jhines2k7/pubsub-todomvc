@@ -31,7 +31,7 @@ function view(state, component) {
 
     console.log(state);
     state.todoItems.forEach( (content) => {
-        let todoItemComponent = new TodoItemComponent(component.eventStore, guid())
+        let todoItemComponent = new TodoItemComponent(component.eventStore, guid());
 
         todoItemComponent.subscribe('sync', 'todo.toggle.completed');
 
