@@ -19,7 +19,7 @@ function view(state, component) {
     let vnode;
 
     let viewContent =  h('div.view', [
-        h('input.toggle', {attrs: {type: 'checkbox', checked: state.checked}, on: {click: clickHandler.bind(this, component)}}),
+        h('input.toggle', {attrs: {type: 'checkbox', checked: state.checked}, on: {click: clickHandler.bind(this, component, state.checked)}}),
         h('label', {attrs: {id: component.id}}, state.content),
         h('button.destroy')
     ]);
@@ -33,7 +33,7 @@ function view(state, component) {
     return vnode;
 }
 
-function clickHandler(component) {
+function clickHandler(component, checked) {
     console.log('Someone clicked a todo item!');
     let id = component.id;
     let todoToggleCompletedEvent = {
@@ -43,7 +43,7 @@ function clickHandler(component) {
         data: {
             id: id,
             content: document.getElementById(id).innerText,
-            completed: true
+            completed: !checked
         }
     };
 
@@ -99,7 +99,7 @@ export default class TodoItemComponent {
             if(event.topic === `todo.toggle.completed.${event.data.id}`) {
                 state.completed = event.data.completed;
                 state.content = event.data.content;
-                state.checked = true;
+                state.checked = event.data.completed;
 
                 return state;
             }
