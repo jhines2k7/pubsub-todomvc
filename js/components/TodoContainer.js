@@ -32,13 +32,15 @@ function view(state, component) {
 
     console.log(state);
     state.todoItems.forEach( (content) => {
-        let todoItemComponent = new TodoItemComponent(component.eventStore, guid());
+        let componentId = guid();
+        let todoItemComponent = new TodoItemComponent(component.eventStore, componentId);
 
-        todoItemComponent.subscribe('sync', 'todo.toggle.completed');
+        todoItemComponent.subscribe('sync', `todo.toggle.completed.${componentId}`);
 
         todoItems.push(todoItemComponent.render({
             content: content,
-            completed: false
+            completed: false,
+            checked: false
         }));
     });
 
