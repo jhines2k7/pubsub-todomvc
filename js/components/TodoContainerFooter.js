@@ -79,7 +79,7 @@ export default class TodoContainerFooter {
                 state.todoCount += 1;
 
                 return state;
-            } else if(event.topic === 'todo.toggle.complete') {
+            } else if(event.topic === 'todo.complete.toggled') {
                 if(event.data.completed) {
                     state.todoCount -= 1;
                     state.numComplete += 1;

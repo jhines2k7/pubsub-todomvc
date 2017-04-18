@@ -29,7 +29,7 @@ function clickHandler(component, completed) {
     let id = component.id;
     let todoToggleCompletedEvent = {
         channel: "sync",
-        topic: `todo.toggle.completed.${id}`,
+        topic: `todo.toggle.${id}`,
         eventType: 'click',
         data: {
             id: id,
@@ -40,7 +40,7 @@ function clickHandler(component, completed) {
 
     let toggleCompleteEvent = {
         channel: "sync",
-        topic: `todo.toggle.complete`,
+        topic: 'todo.complete.toggled',
         eventType: 'click',
         data: {
             completed: !completed
@@ -95,7 +95,7 @@ export default class TodoItemComponent {
 
     reduce(events) {
         return events.reduce(function(state, event){
-            if(event.topic === `todo.toggle.completed.${event.data.id}`) {
+            if(event.topic === `todo.toggle.${event.data.id}`) {
                 state.completed = event.data.completed;
                 state.content = event.data.content;
 
