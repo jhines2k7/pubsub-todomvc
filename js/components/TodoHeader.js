@@ -43,16 +43,43 @@ function keyUpHandler(component, event) {
         let todoContent = event.currentTarget.value;
         event.currentTarget.value = '';
 
+        // pass the event an array of todo items
+        // get all list items in the dom
+        let todos = [];
+
+        let el = document.querySelector('.todo-list');
+
+        if(el) {
+            let matches = el.querySelectorAll('li');
+
+            matches.forEach( (li) => {
+                console.log(li);
+                todos.push({
+                    id: li.id,
+                    content: li.innerText,
+                    completed: li.querySelector('input').checked
+                })
+            });
+        }
+
+        // add current todo
+        todos.push({
+            id: guid(),
+            content: todoContent,
+            completed: false
+        });
+
         let addTodoEvent = {
             channel: "sync",
             topic: "todo.add",
             eventType: 'keyup',
-            data: {
+            /*data: {
                 id: guid(),
                 content: todoContent,
                 completed: false,
                 checked: false
-            }
+            }*/
+            data: todos
         };
 
         component.publish(addTodoEvent);

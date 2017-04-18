@@ -27,8 +27,7 @@ function view(state, component) {
 
         todoItems.push(todoItemComponent.render({
             content: todo.content,
-            completed: false,
-            checked: false
+            completed: false
         }));
     });
 
@@ -82,12 +81,7 @@ export default class TodoContainerComponent {
 
     reduce(events) {
         return events.reduce(function(state, event){
-            state.todoItems.push({
-                id: event.data.id,
-                content: event.data.content,
-                completed: event.data.completed,
-                checked: event.data.checked
-            });
+            state.todoItems = event.data;
 
             return state;
         }, {

@@ -30,10 +30,10 @@ function view(state, component) {
         vnode = h('li.completed', viewContent);
     }*/
 
-    return h('li', {class: {completed: state.completed}}, [
+    return h('li', {attrs: {id: component.id}, class: {completed: state.completed}}, [
         h('div.view', [
-            h('input.toggle', {attrs: {type: 'checkbox', checked: state.checked}, on: {click: clickHandler.bind(this, component, state.checked)}}),
-            h('label', {attrs: {id: component.id}}, state.content),
+            h('input.toggle', {attrs: {type: 'checkbox', checked: state.completed}, on: {click: clickHandler.bind(this, component, state.checked)}}),
+            h('label', state.content),
             h('button.destroy')
         ])
     ]);
@@ -105,14 +105,12 @@ export default class TodoItemComponent {
             if(event.topic === `todo.toggle.completed.${event.data.id}`) {
                 state.completed = event.data.completed;
                 state.content = event.data.content;
-                state.checked = event.data.completed;
 
                 return state;
             }
         }, {
             content: '',
-            completed: false,
-            checked: false
+            completed: false
         });
     }
 }
