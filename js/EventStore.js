@@ -9,9 +9,21 @@ export default class EventStore {
         return this.events.filter(isEventForComponent(subscriptions));
     }
 
-    add(event) {
-        this.events.push(event);
-        postal.publish(event);
+    add(events) {
+        if(Array.isArray(events)) {
+            this.events = events.reduce( function(coll, item){
+                coll.push( item );
+
+                return coll;
+            }, this.events );
+
+            events.forEach( (event) => {
+                postal.publish(event);
+            });
+        } else {
+            this.events.push(events);
+            postal.publish(events);
+        }
     }
 }
 

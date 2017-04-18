@@ -13,4 +13,4 @@ todoContainerComponent.subscribe('sync', 'todo.add');
 
 let todoContainerFooter = new TodoContainerFooter(document.getElementById('footer'), eventStore);
 todoContainerFooter.subscribe('sync', 'todo.add');
-todoContainerFooter.subscribe('sync', 'todo.toggle.completed');
+todoContainerFooter.subscribe('sync', 'todo.toggle.complete');

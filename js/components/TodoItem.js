@@ -38,7 +38,16 @@ function clickHandler(component, checked) {
         }
     };
 
-    component.publish(todoToggleCompletedEvent);
+    let toggleCompleteEvent = {
+        channel: "sync",
+        topic: `todo.toggle.complete`,
+        eventType: 'click',
+        data: {
+            completed: checked
+        }
+    };
+
+    component.publish([todoToggleCompletedEvent, toggleCompleteEvent]);
 }
 
 function updateDom(container, newVnode) {
@@ -73,8 +82,8 @@ export default class TodoItemComponent {
         return subscription;
     }
 
-    publish(event) {
-        this.eventStore.add(event);
+    publish(events) {
+        this.eventStore.add(events);
     }
 
     render(state) {
