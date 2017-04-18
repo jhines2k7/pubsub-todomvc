@@ -78,7 +78,6 @@ export default class TodoItemComponent {
     }
 
     render(state) {
-        //return patch(this.elm, view(state, this));
         const newVnode = view(state, this);
         this.elm = updateDom(this.elm, newVnode);
 

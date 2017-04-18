@@ -43,7 +43,7 @@ function keyUpHandler(component, event) {
         let todoContent = event.currentTarget.value;
         event.currentTarget.value = '';
 
-        // pass the event an array of todo items
+        // pass the event an array of items
         // get all list items in the dom
         let todos = [];
 
@@ -53,7 +53,6 @@ function keyUpHandler(component, event) {
             let matches = el.querySelectorAll('li');
 
             matches.forEach( (li) => {
-                console.log(li);
                 todos.push({
                     id: li.id,
                     content: li.innerText,
@@ -62,7 +61,7 @@ function keyUpHandler(component, event) {
             });
         }
 
-        // add current todo
+        // add current item
         todos.push({
             id: guid(),
             content: todoContent,
