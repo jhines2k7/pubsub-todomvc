@@ -24,7 +24,7 @@ function view(state, component) {
     ]);
 }
 
-function clickHandler(component, checked) {
+function clickHandler(component, completed) {
     console.log('Someone clicked a todo item!');
     let id = component.id;
     let todoToggleCompletedEvent = {
@@ -34,7 +34,7 @@ function clickHandler(component, checked) {
         data: {
             id: id,
             content: document.getElementById(id).innerText,
-            completed: !checked
+            completed: !completed
         }
     };
 
@@ -43,7 +43,7 @@ function clickHandler(component, checked) {
         topic: `todo.toggle.complete`,
         eventType: 'click',
         data: {
-            completed: checked
+            completed: !completed
         }
     };
 

@@ -11,10 +11,10 @@ export default class EventStore {
 
     add(events) {
         if(Array.isArray(events)) {
-            this.events = events.reduce( function(coll, item){
-                coll.push( item );
+            this.events = events.reduce( function(collection, event){
+                collection.push( event );
 
-                return coll;
+                return collection;
             }, this.events );
 
             events.forEach( (event) => {

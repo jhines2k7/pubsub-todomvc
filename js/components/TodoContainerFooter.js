@@ -80,11 +80,11 @@ export default class TodoContainerFooter {
 
                 return state;
             } else if(event.topic === 'todo.toggle.complete') {
-                if(event.data.checked) {
+                if(event.data.completed) {
                     state.todoCount -= 1;
 
                     return state;
-                } else if (!event.data.checked) {
+                } else if (!event.data.completed) {
                     state.todoCount += 1;
 
                     return state;
