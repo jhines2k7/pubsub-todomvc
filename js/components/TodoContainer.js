@@ -33,12 +33,12 @@ function view(state, component) {
 
     return h('section.main', [
         h('input.toggle-all', {attrs: {type: 'checkbox'}}),
-        h('label', {attrs: {for: 'toggle-all'}, on: {click: clickHandler.bind(null, component)}}, 'Mark all as complete'),
+        h('label', {attrs: {for: 'toggle-all'}, on: {click: clickHandler.bind(null, component, state.markAllComplete)}}, 'Mark all as complete'),
         h('ul.todo-list', todoItems)
     ]);
 }
 
-function clickHandler(component) {
+function clickHandler(component, markAllComplete) {
     "use strict";
 
     let lastAddEvent = component.eventStore.events.filter( (event) => {
@@ -47,11 +47,11 @@ function clickHandler(component) {
 
     let todos = [];
 
-    lastAddEvent.data.forEach( (event) => {
+    lastAddEvent.data.todos.forEach( (event) => {
         todos.push({
             id: event.id,
             content: event.content,
-            completed: true
+            completed: !markAllComplete
         });
     });
 
@@ -59,7 +59,10 @@ function clickHandler(component) {
         channel: "sync",
         topic: 'todo.toggle.all',
         eventType: 'click',
-        data: todos
+        data: {
+            todos: todos,
+            markAllComplete: !markAllComplete
+        }
     };
 
     component.publish(toggleAllEvent);
@@ -112,11 +115,18 @@ export default class TodoContainerComponent {
 
     reduce(events) {
         return events.reduce(function(state, event){
-            state.todoItems = event.data;
+            state.todoItems = event.data.todos;
 
-            return state;
+            if(event.topic === 'todo.add') {
+                return state;
+            } else if(event.topic === 'todo.toggle.all') {
+                state.markAllComplete = event.data.markAllComplete;
+
+                return state;
+            }
         }, {
-            todoItems: []
+            todoItems: [],
+            markAllComplete: false
         });
     }
 }

@@ -78,7 +78,9 @@ function keyUpHandler(component, event) {
             channel: "sync",
             topic: "todo.add",
             eventType: 'keyup',
-            data: todos
+            data: {
+                todos: todos
+            }
         };
 
         component.publish(addTodoEvent);
