@@ -25,7 +25,7 @@ function view(state) {
             h('li', [h('a', {props: {href: '#/completed'}}, 'Completed')])
         ]),
         // Hidden if no completed items are left
-        h('button.clear-completed', 'Clear completed')
+        state.numComplete > 0 ? h('button.clear-completed', 'Clear completed') : null
     ]);
 }
 
@@ -82,16 +82,19 @@ export default class TodoContainerFooter {
             } else if(event.topic === 'todo.toggle.complete') {
                 if(event.data.completed) {
                     state.todoCount -= 1;
+                    state.numComplete += 1;
 
                     return state;
                 } else if (!event.data.completed) {
                     state.todoCount += 1;
+                    state.numComplete -= 1;
 
                     return state;
                 }
             }
         }, {
-            todoCount: 0
+            todoCount: 0,
+            numComplete: 0
         });
     }
 }

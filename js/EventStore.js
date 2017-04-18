@@ -11,7 +11,7 @@ export default class EventStore {
 
     add(events) {
         if(Array.isArray(events)) {
-            this.events = events.reduce( function(collection, event){
+            this.events = events.reduce( (collection, event) => {
                 collection.push( event );
 
                 return collection;
