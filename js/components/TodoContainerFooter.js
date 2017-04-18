@@ -98,8 +98,8 @@ export default class TodoContainerFooter {
 
                     return state;
                 } else {
-                    state.todoCount += 1;
-                    state.numComplete -= 1;
+                    state.todoCount = event.data.numTodos;
+                    state.numComplete = 0;
 
                     return state;
                 }

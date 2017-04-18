@@ -61,7 +61,8 @@ function clickHandler(component, markAllComplete) {
         eventType: 'click',
         data: {
             todos: todos,
-            markAllComplete: !markAllComplete
+            markAllComplete: !markAllComplete,
+            numTodos: lastAddEvent.data.todos.length
         }
     };
 
