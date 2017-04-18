@@ -27,7 +27,7 @@ function view(state, component) {
 
         todoItems.push(todoItemComponent.render({
             content: todo.content,
-            completed: false
+            completed: todo.completed
         }));
     });
 

@@ -73,12 +73,6 @@ function keyUpHandler(component, event) {
             channel: "sync",
             topic: "todo.add",
             eventType: 'keyup',
-            /*data: {
-                id: guid(),
-                content: todoContent,
-                completed: false,
-                checked: false
-            }*/
             data: todos
         };
 
