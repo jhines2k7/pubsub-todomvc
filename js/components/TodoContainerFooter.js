@@ -12,12 +12,12 @@ let h = require('snabbdom/h').default; // helper function for creating vnodes
 
 import postal from 'postal/lib/postal.lodash'
 
-function view() {
+function view(state) {
     "use strict";
 
     return h('footer.footer', [
         h('span.todo-count', [
-            h('strong', '0 items left')
+            h('strong', `${state.todoCount} ${state.todoCount !== 1 ? 'items' : 'item'} left`)
         ]),
         h('ul.filters', [
             h('li', [h('a.selected', {props: {href: '#/'}, on: {click: clickHandler.bind(null)}}, 'All')]),
@@ -31,6 +31,12 @@ function view() {
 
 function clickHandler(component) {
     console.log('Someone clicked me!');
+}
+
+function updateDom(container, newVnode) {
+    "use strict";
+
+    return patch(container, newVnode);
 }
 
 export default class TodoContainerFooter {
@@ -48,7 +54,8 @@ export default class TodoContainerFooter {
                 let events = this.eventStore.filter(this.subscriptions);
 
                 if(events.length > 0) {
-                    this.render();
+                    let reducedState = this.reduce(events);
+                    this.render(reducedState);
                 }
             }.bind(this)
         });
@@ -58,7 +65,21 @@ export default class TodoContainerFooter {
         return subscription;
     }
 
-    render() {
-        return patch(this.container, view());
+    render(state) {
+        //return patch(this.container, view(state));
+        const newVnode = view(state);
+        this.container = updateDom(this.container, newVnode);
+
+        return this.container;
+    }
+
+    reduce(events) {
+        return events.reduce(function(state){
+            state.todoCount += 1;
+
+            return state;
+        }, {
+            todoCount: 0
+        });
     }
 }
