@@ -14,31 +14,19 @@ let h = require('snabbdom/h').default; // helper function for creating vnodes
 
 import postal from 'postal/lib/postal.lodash'
 
-function guid() {
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-        s4() + '-' + s4() + s4() + s4();
-}
-
-function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-}
-
 function view(state, component) {
     "use strict";
 
     let todoItems = [];
 
     console.log(state);
-    state.todoItems.forEach( (content) => {
-        let componentId = guid();
-        let todoItemComponent = new TodoItemComponent(component.eventStore, componentId);
+    state.todoItems.forEach( (todo) => {
+        let todoItemComponent = new TodoItemComponent(component.eventStore, todo.id);
 
-        todoItemComponent.subscribe('sync', `todo.toggle.completed.${componentId}`);
+        todoItemComponent.subscribe('sync', `todo.toggle.completed.${todo.id}`);
 
         todoItems.push(todoItemComponent.render({
-            content: content,
+            content: todo.content,
             completed: false,
             checked: false
         }));
@@ -94,7 +82,12 @@ export default class TodoContainerComponent {
 
     reduce(events) {
         return events.reduce(function(state, event){
-            state.todoItems.push(event.data.content);
+            state.todoItems.push({
+                id: event.data.id,
+                content: event.data.content,
+                completed: event.data.completed,
+                checked: event.data.checked
+            });
 
             return state;
         }, {

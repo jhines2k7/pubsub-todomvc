@@ -10,6 +10,17 @@ let patch = snabbdom.init([ // Init patch function with chosen modules
 
 let h = require('snabbdom/h').default; // helper function for creating vnodes
 
+function guid() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+        s4() + '-' + s4() + s4() + s4();
+}
+
+function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+}
+
 function view(component) {
     "use strict";
 
@@ -37,7 +48,10 @@ function keyUpHandler(component, event) {
             topic: "todo.add",
             eventType: 'keyup',
             data: {
-                content: todoContent
+                id: guid(),
+                content: todoContent,
+                completed: false,
+                checked: false
             }
         };
 
