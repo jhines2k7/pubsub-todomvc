@@ -15,24 +15,9 @@ import postal from 'postal/lib/postal.lodash'
 function view(state, component) {
     "use strict";
 
-    // need to figure out why class toggling is not working correctly
-    /*let vnode;
-
-    let viewContent =  h('div.view', [
-        h('input.toggle', {attrs: {type: 'checkbox', checked: state.checked}, on: {click: clickHandler.bind(this, component, state.checked)}}),
-        h('label', {attrs: {id: component.id}}, state.content),
-        h('button.destroy')
-    ]);
-
-    if(!state.completed) {
-        vnode = h('li', viewContent);
-    } else {
-        vnode = h('li.completed', viewContent);
-    }*/
-
     return h('li', {attrs: {id: component.id}, class: {completed: state.completed}}, [
         h('div.view', [
-            h('input.toggle', {attrs: {type: 'checkbox', checked: state.completed}, on: {click: clickHandler.bind(this, component, state.checked)}}),
+            h('input.toggle', {attrs: {type: 'checkbox', checked: state.completed}, on: {click: clickHandler.bind(this, component, state.completed)}}),
             h('label', state.content),
             h('button.destroy')
         ])
