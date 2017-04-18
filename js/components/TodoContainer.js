@@ -33,36 +33,36 @@ function view(state, component) {
 
     return h('section.main', [
         h('input.toggle-all', {attrs: {type: 'checkbox'}}),
-        h('label', {attrs: {for: 'toggle-all'}, on: {click: clickHandler.bind(this, component)}}, 'Mark all as complete'),
+        h('label', {attrs: {for: 'toggle-all'}, on: {click: clickHandler.bind(null, component)}}, 'Mark all as complete'),
         h('ul.todo-list', todoItems)
     ]);
 }
 
 function clickHandler(component) {
     "use strict";
-    console.log('Toggle all selected!');
-    // use the event store and some kind of reducer here to get all the todos
-    console.log('All todos: ', component.eventStore.events);
 
-    // get all of the added and toggled events
-    let addedAndToggledEvents = component.eventStore.events.filter( (event) => {
-        let re = /todo.toggle/;
-        return event.topic === 'todo.add' || event.topic.match(re);
-    });
+    let lastAddEvent = component.eventStore.events.filter( (event) => {
+        return event.topic === 'todo.add';
+    }).pop();
 
-    console.log('Filtered todos: ', addedAndToggledEvents);
-    /*let todos = events.reduce( () => {
+    let todos = [];
 
+    lastAddEvent.data.forEach( (event) => {
+        todos.push({
+            id: event.id,
+            content: event.content,
+            completed: true
+        });
     });
 
     let toggleAllEvent = {
         channel: "sync",
-        topic: `todo.toggle.all`,
+        topic: 'todo.toggle.all',
         eventType: 'click',
         data: todos
-    };*/
+    };
 
-    //component.publish(toggleAllEvent);
+    component.publish(toggleAllEvent);
 }
 
 function updateDom(container, newVnode) {

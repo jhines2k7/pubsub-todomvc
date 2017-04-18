@@ -91,6 +91,11 @@ export default class TodoContainerFooter {
 
                     return state;
                 }
+            } else if(event.topic === 'todo.toggle.all') {
+                state.todoCount = 0;
+                state.numComplete = 1;
+
+                return state;
             }
         }, {
             todoCount: 0,
