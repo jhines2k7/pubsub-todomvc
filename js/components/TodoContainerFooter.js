@@ -74,10 +74,22 @@ export default class TodoContainerFooter {
     }
 
     reduce(events) {
-        return events.reduce(function(state){
-            state.todoCount += 1;
+        return events.reduce(function(state, event){
+            if(event.topic === 'todo.add') {
+                state.todoCount += 1;
 
-            return state;
+                return state;
+            } else if(event.topic === 'todo.toggle.completed') {
+                if(event.data.checked) {
+                    state.todoCount -= 1;
+
+                    return state;
+                } else if (!event.data.checked) {
+                    state.todoCount += 1;
+
+                    return state;
+                }
+            }
         }, {
             todoCount: 0
         });

@@ -47,6 +47,12 @@ function keyUpHandler(component, event) {
         // get all list items in the dom
         let todos = [];
 
+        /*
+            I've been getting current state from the DOM, but that's really ideal as
+            it introduces uneeded coupling with the ui. I should be getting current state by
+            replaying events and reducing them down to what I need
+         */
+        // TODO Experiment with using a reducer to get the current state of the app
         let el = document.querySelector('.todo-list');
 
         if(el) {
