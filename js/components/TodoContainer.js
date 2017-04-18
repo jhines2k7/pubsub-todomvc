@@ -42,8 +42,15 @@ function clickHandler(component) {
     "use strict";
     console.log('Toggle all selected!');
     // use the event store and some kind of reducer here to get all the todos
-    console.log(component.eventStore.events);
+    console.log('All todos: ', component.eventStore.events);
 
+    // get all of the added and toggled events
+    let addedAndToggledEvents = component.eventStore.events.filter( (event) => {
+        let re = /todo.toggle/;
+        return event.topic === 'todo.add' || event.topic.match(re);
+    });
+
+    console.log('Filtered todos: ', addedAndToggledEvents);
     /*let todos = events.reduce( () => {
 
     });
