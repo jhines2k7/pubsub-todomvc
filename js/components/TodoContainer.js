@@ -66,7 +66,8 @@ function toggleTodoClickHandler(component, id, completed) {
         topic: 'todo.complete.toggled',
         eventType: 'click',
         data: {
-            numTodos: lastAddEvent.data.todos.length
+            numTodos: lastAddEvent.data.todos.length,
+            completed: !completed
         }
     };
 
