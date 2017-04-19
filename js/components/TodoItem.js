@@ -25,7 +25,7 @@ function view(state, component) {
 
     return h('li', {attrs: {id: component.id}, class: {completed: state.completed}}, [
         h('div.view', [
-            checkbox,
+            h('input.toggle', {attrs: {type: 'checkbox', checked: true}, on: {click: clickHandler.bind(this, component, state.completed)}}),
             h('label', state.content),
             h('button.destroy')
         ])

@@ -21,14 +21,13 @@ function view(state, component) {
 
     console.log(state);
     state.todoItems.forEach( (todo) => {
-        let todoItemComponent = new TodoItemComponent(component.eventStore, todo.id);
-
-        todoItemComponent.subscribe('sync', `todo.toggle.${todo.id}`);
-
-        todoItems.push(todoItemComponent.render({
-            content: todo.content,
-            completed: todo.completed
-        }));
+        h('li', {attrs: {id: todo.id}, class: {completed: state.completed}}, [
+            h('div.view', [
+                h('input.toggle', {attrs: {type: 'checkbox', checked: todo.completed}, on: {click: toggleTodoClickHandler.bind(todo.id, todo.completed)}}),
+                h('label', todo.content),
+                h('button.destroy')
+            ])
+        ]);
     });
 
     return h('section.main', [
@@ -36,6 +35,32 @@ function view(state, component) {
         h('label', {attrs: {for: 'toggle-all'}, on: {click: clickHandler.bind(null, component, state.markAllComplete)}}, 'Mark all as complete'),
         h('ul.todo-list', todoItems)
     ]);
+}
+
+function toggleTodoClickHandler(id, completed) {
+    "use strict";
+    console.log('Someone clicked a todo item!');
+    let todoToggleCompletedEvent = {
+        channel: "sync",
+        topic: `todo.toggle`,
+        eventType: 'click',
+        data: {
+            id: id,
+            content: document.getElementById(id).innerText.trim(),
+            completed: !completed
+        }
+    };
+
+    let toggleCompleteEvent = {
+        channel: "sync",
+        topic: 'todo.complete.toggled',
+        eventType: 'click',
+        data: {
+            completed: !completed
+        }
+    };
+
+    component.publish([todoToggleCompletedEvent, toggleCompleteEvent]);
 }
 
 function clickHandler(component, markAllComplete) {
