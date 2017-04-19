@@ -61,7 +61,7 @@ function keyUpHandler(component, event) {
             matches.forEach( (li) => {
                 todos.push({
                     id: li.id,
-                    content: li.innerText,
+                    content: li.innerText.trim(),
                     completed: li.querySelector('input').checked
                 })
             });

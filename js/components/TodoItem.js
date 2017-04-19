@@ -15,9 +15,17 @@ import postal from 'postal/lib/postal.lodash'
 function view(state, component) {
     "use strict";
 
+    let checkbox;
+
+    if(state.completed) {
+        checkbox = h('input.toggle', {attrs: {type: 'checkbox', checked: true}, on: {click: clickHandler.bind(this, component, state.completed)}});
+    } else {
+        checkbox = h('input.toggle', {attrs: {type: 'checkbox'}, on: {click: clickHandler.bind(this, component, state.completed)}});
+    }
+
     return h('li', {attrs: {id: component.id}, class: {completed: state.completed}}, [
         h('div.view', [
-            h('input.toggle', {attrs: {type: 'checkbox', checked: state.completed}, on: {click: clickHandler.bind(this, component, state.completed)}}),
+            checkbox,
             h('label', state.content),
             h('button.destroy')
         ])
@@ -33,7 +41,7 @@ function clickHandler(component, completed) {
         eventType: 'click',
         data: {
             id: id,
-            content: document.getElementById(id).innerText,
+            content: document.getElementById(id).innerText.trim(),
             completed: !completed
         }
     };
