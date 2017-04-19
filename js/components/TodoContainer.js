@@ -17,13 +17,11 @@ import postal from 'postal/lib/postal.lodash'
 function view(state, component) {
     "use strict";
 
-    let todoItems = [];
-
     console.log(state);
-    state.todoItems.forEach( (todo) => {
-        h('li', {attrs: {id: todo.id}, class: {completed: state.completed}}, [
+    let todoItems = state.todoItems.map( (todo) => {
+        return h('li', {attrs: {id: todo.id}, class: {completed: todo.completed}}, [
             h('div.view', [
-                h('input.toggle', {attrs: {type: 'checkbox', checked: todo.completed}, on: {click: toggleTodoClickHandler.bind(todo.id, todo.completed)}}),
+                h('input.toggle', {attrs: {type: 'checkbox', checked: todo.completed}, on: {click: toggleTodoClickHandler.bind(null, component, todo.id, todo.completed)}}),
                 h('label', todo.content),
                 h('button.destroy')
             ])
@@ -37,17 +35,29 @@ function view(state, component) {
     ]);
 }
 
-function toggleTodoClickHandler(id, completed) {
+function toggleTodoClickHandler(component, id, completed) {
     "use strict";
     console.log('Someone clicked a todo item!');
-    let todoToggleCompletedEvent = {
+
+    let lastAddEvent = component.eventStore.events.filter( (event) => {
+        return event.topic === 'todo.add';
+    }).pop();
+
+    // find clicked todoitem and toggle its completed property
+    let todos = lastAddEvent.data.todos.map( (todo) => {
+        if(todo.id === id) {
+            todo.completed = !completed;
+        }
+
+        return todo;
+    });
+
+    let todoToggleEvent = {
         channel: "sync",
         topic: `todo.toggle`,
         eventType: 'click',
         data: {
-            id: id,
-            content: document.getElementById(id).innerText.trim(),
-            completed: !completed
+            todos: todos,
         }
     };
 
@@ -56,11 +66,11 @@ function toggleTodoClickHandler(id, completed) {
         topic: 'todo.complete.toggled',
         eventType: 'click',
         data: {
-            completed: !completed
+            numTodos: lastAddEvent.data.todos.length
         }
     };
 
-    component.publish([todoToggleCompletedEvent, toggleCompleteEvent]);
+    component.publish([todoToggleEvent, toggleCompleteEvent]);
 }
 
 function clickHandler(component, markAllComplete) {
@@ -148,6 +158,8 @@ export default class TodoContainerComponent {
             } else if(event.topic === 'todo.toggle.all') {
                 state.markAllComplete = event.data.markAllComplete;
 
+                return state;
+            } else if (event.topic === 'todo.toggle') {
                 return state;
             }
         }, {

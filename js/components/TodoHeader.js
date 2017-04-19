@@ -48,7 +48,7 @@ function keyUpHandler(component, event) {
         let todos = [];
 
         /*
-            I've been getting current state from the DOM, but that's really ideal as
+            I've been getting current state from the DOM, but that's not really ideal as
             it introduces uneeded coupling with the ui. I should be getting current state by
             replaying events and reducing them down to what I need
          */
