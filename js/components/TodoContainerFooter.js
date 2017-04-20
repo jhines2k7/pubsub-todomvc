@@ -25,7 +25,7 @@ function view(state) {
             h('li', [h('a', {props: {href: '#/completed'}}, 'Completed')])
         ]),
         // Hidden if no completed items are left
-        state.itemsLeft > 0 ? h('button.clear-completed', 'Clear completed') : null
+        state.completedItems > 0 ? h('button.clear-completed', 'Clear completed') : null
     ]);
 }
 
@@ -79,9 +79,12 @@ export default class TodoContainerFooter {
                 state.itemsLeft += event.data.itemsLeft;
 
                 return state;
+            } else if(event.topic === 'todo.toggle') {
+                state.completedItems += event.data.completedItems;
             }
         }, {
-            itemsLeft: 0
+            itemsLeft: 0,
+            completedItems: 0
         });
     }
 }
