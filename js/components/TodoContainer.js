@@ -113,36 +113,46 @@ function toggleAllClickHandler(component, markAllComplete) {
         return event.topic === 'todo.add';
     }).pop();
 
-    let todos = lastAddEvent.data.todos.map( (event) => {
-        return {
-            id: event.id,
-            content: event.content,
-            completed: !markAllComplete
-        };
-    });
+    let todos = [];
 
     let toggleAllEvent;
 
     if(!markAllComplete === true) {
+        todos = lastAddEvent.data.todos.map( (todo) => {
+            return {
+                id: todo.id,
+                content: todo.content,
+                completed: true
+            };
+        });
+
         toggleAllEvent = {
             channel: "sync",
             topic: 'todo.toggle.all.complete',
             eventType: 'click',
             data: {
                 todos: todos,
-                markAllComplete: !markAllComplete,
+                markAllComplete: true,
                 itemsLeft: 0,
                 completedItems: todos.length
             }
         }
     } else {
+        todos = lastAddEvent.data.todos.map( (todo) => {
+            return {
+                id: todo.id,
+                content: todo.content,
+                completed: false
+            };
+        });
+
         toggleAllEvent = {
             channel: "sync",
             topic: 'todo.toggle.all.incomplete',
             eventType: 'click',
             data: {
                 todos: todos,
-                markAllComplete: !markAllComplete,
+                markAllComplete: false,
                 itemsLeft: todos.length,
                 completedItems: 0
             }
