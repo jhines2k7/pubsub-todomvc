@@ -20,6 +20,8 @@ cp node_modules/todomvc-common/base.css build
 
 # change the src property of the script tag to app.js
 sed -i 's/build-dev\/app.js/app.js/g' build/index.html
+sed -i 's/node_modules\/todomvc-common\/base.css/base.css/g' build/index.html
+sed -i 's/node_modules\/todomvc-app-css\/index.css/index.css/g' build/index.html
 
 sudo docker build -t jhines2017/pubsub-todomvc .
 
