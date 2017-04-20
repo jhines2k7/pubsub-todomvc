@@ -74,7 +74,8 @@ function toggleTodoClickHandler(component, id, completed) {
             eventType: 'click',
             data: {
                 todos: todos,
-                completedItems: -1
+                completedItems: 1,
+                itemsLeft: -1
             }
         };
 
@@ -86,7 +87,8 @@ function toggleTodoClickHandler(component, id, completed) {
             eventType: 'click',
             data: {
                 todos: todos,
-                completedItems: 1
+                completedItems: -1,
+                itemsLeft: 1
             }
         };
 
