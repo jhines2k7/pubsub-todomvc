@@ -79,7 +79,8 @@ function keyUpHandler(component, event) {
             topic: "todo.add",
             eventType: 'keyup',
             data: {
-                todos: todos
+                todos: todos,
+                itemsLeft: 1
             }
         };
 

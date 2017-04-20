@@ -76,7 +76,7 @@ export default class TodoContainerFooter {
     reduce(events) {
         return events.reduce(function(state, event){
             if(event.topic === 'todo.add') {
-                state.itemsLeft += 1;
+                state.itemsLeft += event.data.itemsLeft;
 
                 return state;
             }
