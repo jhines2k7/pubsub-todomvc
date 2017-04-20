@@ -42,6 +42,7 @@ function toggleTodoClickHandler(component, id, completed) {
     }).pop();
 
     let todos = [];
+    let completedItems = 0;
 
     if(lastToggleEvent){
         todos = lastToggleEvent.data.todos.map( (todo) => {
@@ -65,16 +66,23 @@ function toggleTodoClickHandler(component, id, completed) {
         });
     }
 
+    if(!completed === true) {
+        completedItems = 1;
+    } else {
+        completedItems = -1;
+    }
+
     let todoToggleEvent = {
         channel: "sync",
         topic: `todo.toggle`,
         eventType: 'click',
         data: {
             todos: todos,
+            completedItems: completedItems
         }
     };
 
-    let toggleCompleteEvent = {
+    /*let toggleCompleteEvent = {
         channel: "sync",
         topic: 'todo.complete.toggled',
         eventType: 'click',
@@ -82,9 +90,9 @@ function toggleTodoClickHandler(component, id, completed) {
             numTodos: todos.length,
             completed: !completed
         }
-    };
+    };*/
 
-    component.publish([todoToggleEvent, toggleCompleteEvent]);
+    component.publish([todoToggleEvent]);
 }
 
 function toggleAllClickHandler(component, markAllComplete) {
