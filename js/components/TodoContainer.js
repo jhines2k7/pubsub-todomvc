@@ -42,11 +42,12 @@ function toggleTodoClickHandler(component, id, completed) {
     }).pop();
 
     let todos = [];
+    completed = !completed;
 
     if(lastToggleEvent){
         todos = lastToggleEvent.data.todos.map( (todo) => {
             if(todo.id === id) {
-                todo.completed = !completed;
+                todo.completed = completed;
             }
 
             return todo;
@@ -58,7 +59,7 @@ function toggleTodoClickHandler(component, id, completed) {
 
         todos = lastAddEvent.data.todos.map( (todo) => {
             if(todo.id === id) {
-                todo.completed = !completed;
+                todo.completed = completed;
             }
 
             return todo;
@@ -67,7 +68,7 @@ function toggleTodoClickHandler(component, id, completed) {
 
     let todoToggleEvent;
 
-    if(!completed === true) {
+    if(completed) {
         todoToggleEvent = {
             channel: "sync",
             topic: `todo.toggle.complete`,
