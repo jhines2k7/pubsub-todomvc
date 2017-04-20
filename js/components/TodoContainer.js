@@ -43,16 +43,10 @@ function toggleTodoClickHandler(component, id, completed) {
 
     let todos = [];
 
-    if(completed === true) {
-        completed = false;
-    } else if(completed === false) {
-        completed = true;
-    }
-
     if(lastToggleEvent){
         todos = lastToggleEvent.data.todos.map( (todo) => {
             if(todo.id === id) {
-                todo.completed = completed;
+                todo.completed = !completed;
             }
 
             return todo;
@@ -64,7 +58,7 @@ function toggleTodoClickHandler(component, id, completed) {
 
         todos = lastAddEvent.data.todos.map( (todo) => {
             if(todo.id === id) {
-                todo.completed = completed;
+                todo.completed = !completed;
             }
 
             return todo;
@@ -73,7 +67,7 @@ function toggleTodoClickHandler(component, id, completed) {
 
     let todoToggleEvent;
 
-    if(completed === true) {
+    if(!completed === true) {
         todoToggleEvent = {
             channel: "sync",
             topic: `todo.toggle.complete`,
@@ -187,6 +181,8 @@ export default class TodoContainerComponent {
             } else if(event.topic === 'todo.toggle.all') {
                 state.markAllComplete = event.data.markAllComplete;
 
+                return state;
+            } else if(event.topic === 'todo.toggle.complete' || event.topic === 'todo.toggle.incomplete') {
                 return state;
             }
         }, {
