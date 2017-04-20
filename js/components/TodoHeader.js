@@ -53,17 +53,17 @@ function keyUpHandler(component, event) {
             replaying events and reducing them down to what I need
          */
         // TODO Experiment with using a reducer to get the current state of the app
-        let el = document.querySelector('.todo-list');
+        let lastAddEvent = component.eventStore.events.filter( (event) => {
+            return event.topic === 'todo.add';
+        }).pop();
 
-        if(el) {
-            let matches = el.querySelectorAll('li');
-
-            matches.forEach( (li) => {
-                todos.push({
-                    id: li.id,
-                    content: li.innerText.trim(),
-                    completed: li.querySelector('input').checked
-                })
+        if(lastAddEvent) {
+            todos = lastAddEvent.data.todos.map( (todo) => {
+                return {
+                    id: todo.id,
+                    content: todo.content,
+                    completed: todo.completed
+                };
             });
         }
 

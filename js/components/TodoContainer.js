@@ -42,7 +42,12 @@ function toggleTodoClickHandler(component, id, completed) {
     }).pop();
 
     let todos = [];
-    completed = !completed;
+
+    if(completed === true) {
+        completed = false;
+    } else if(completed === false) {
+        completed = true;
+    }
 
     if(lastToggleEvent){
         todos = lastToggleEvent.data.todos.map( (todo) => {
@@ -93,8 +98,6 @@ function toggleTodoClickHandler(component, id, completed) {
 
         component.publish(todoToggleEvent);
     }
-
-
 
     /*let toggleCompleteEvent = {
         channel: "sync",
