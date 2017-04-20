@@ -17,7 +17,7 @@ import postal from 'postal/lib/postal.lodash'
 function view(state, component) {
     "use strict";
 
-    let liNodes = state.todoItems.map( (todo) => {
+    let liNodes = state.todos.map( (todo) => {
         return h('li', {attrs: {id: todo.id}, class: {completed: todo.completed}}, [
             h('div.view', [
                 h('input.toggle', {attrs: {type: 'checkbox', checked: todo.completed}, on: {click: toggleTodoClickHandler.bind(null, component, todo.id, todo.completed)}}),
@@ -166,7 +166,7 @@ export default class TodoContainerComponent {
 
     reduce(events) {
         return events.reduce(function(state, event){
-            state.todoItems = event.data.todos;
+            state.todos = event.data.todos;
 
             if(event.topic === 'todo.add') {
                 return state;
@@ -178,7 +178,7 @@ export default class TodoContainerComponent {
                 return state;
             }
         }, {
-            todoItems: [],
+            todos: [],
             markAllComplete: false
         });
     }
