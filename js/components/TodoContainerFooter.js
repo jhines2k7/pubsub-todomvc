@@ -89,6 +89,8 @@ export default class TodoContainerFooter {
                 state.itemsLeft += event.data.itemsLeft;
 
                 return state;
+            } else if(event.topic === 'toggle.all') {
+
             }
         }, {
             itemsLeft: 0,

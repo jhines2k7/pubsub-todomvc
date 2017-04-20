@@ -12,10 +12,12 @@ let todoContainerComponent = new TodoContainerComponent(document.getElementById(
 todoContainerComponent.subscribe('sync', 'todo.add');
 todoContainerComponent.subscribe('sync', 'todo.toggle.complete');
 todoContainerComponent.subscribe('sync', 'todo.toggle.incomplete');
-todoContainerComponent.subscribe('sync', 'todo.toggle.all');
+todoContainerComponent.subscribe('sync', 'todo.toggle.all.complete');
+todoContainerComponent.subscribe('sync', 'todo.toggle.all.incomplete');
 
 let todoContainerFooter = new TodoContainerFooter(document.getElementById('footer'), eventStore);
 todoContainerFooter.subscribe('sync', 'todo.add');
 todoContainerFooter.subscribe('sync', 'todo.toggle.complete');
 todoContainerFooter.subscribe('sync', 'todo.toggle.incomplete');
-todoContainerFooter.subscribe('sync', 'todo.toggle.all');
+todoContainerFooter.subscribe('sync', 'todo.toggle.all.complete');
+todoContainerFooter.subscribe('sync', 'todo.toggle.all.incomplete');
