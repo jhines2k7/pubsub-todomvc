@@ -17,6 +17,6 @@ cp index.html build
 # change the src property of the script tag to app.js
 sed -i 's/build-dev\/app.js/app.js/g' build/index.html
 
-docker build -t jhines2017/pubsub-todomvc .
+sudo docker build -t jhines2017/pubsub-todomvc .
 
 date; echo;
