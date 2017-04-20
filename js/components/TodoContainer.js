@@ -68,14 +68,14 @@ function toggleTodoClickHandler(component, id, completed) {
 
     let todoToggleEvent;
 
-    if(completed) {
+    if(completed === true) {
         todoToggleEvent = {
             channel: "sync",
             topic: `todo.toggle.complete`,
             eventType: 'click',
             data: {
                 todos: todos,
-                completedItems: 1
+                completedItems: -1
             }
         };
 
@@ -87,11 +87,11 @@ function toggleTodoClickHandler(component, id, completed) {
             eventType: 'click',
             data: {
                 todos: todos,
-                completedItems: -1
+                completedItems: 1
             }
         };
 
-        component.publish([todoToggleEvent]);
+        component.publish(todoToggleEvent);
     }
 
 
