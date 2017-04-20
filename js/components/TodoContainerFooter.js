@@ -17,7 +17,7 @@ function view(state) {
 
     return h('footer.footer', [
         h('span.todo-count', [
-            h('strong', `${state.todoCount} ${state.todoCount !== 1 ? 'items' : 'item'} left`)
+            h('strong', `${state.itemsLeft} ${state.itemsLeft !== 1 ? 'items' : 'item'} left`)
         ]),
         h('ul.filters', [
             h('li', [h('a.selected', {props: {href: '#/'}, on: {click: clickHandler.bind(null)}}, 'All')]),
@@ -25,7 +25,7 @@ function view(state) {
             h('li', [h('a', {props: {href: '#/completed'}}, 'Completed')])
         ]),
         // Hidden if no completed items are left
-        state.numComplete > 0 ? h('button.clear-completed', 'Clear completed') : null
+        state.itemsLeft > 0 ? h('button.clear-completed', 'Clear completed') : null
     ]);
 }
 
