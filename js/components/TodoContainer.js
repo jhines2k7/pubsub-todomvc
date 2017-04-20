@@ -36,8 +36,7 @@ function view(state, component) {
 
 function toggleTodoClickHandler(component, id, completed) {
     "use strict";
-    console.log('Someone clicked a todo item!');
-
+    console.log(component.eventStore.events);
     let lastToggleEvent = component.eventStore.events.filter( (event) => {
         return event.topic === 'todo.toggle';
     }).pop();
@@ -95,14 +94,12 @@ function toggleAllClickHandler(component, markAllComplete) {
         return event.topic === 'todo.add';
     }).pop();
 
-    let todos = [];
-
-    lastAddEvent.data.todos.forEach( (event) => {
-        todos.push({
+    let todos = lastAddEvent.data.todos.map( (event) => {
+        return {
             id: event.id,
             content: event.content,
             completed: !markAllComplete
-        });
+        };
     });
 
     let toggleAllEvent = {
@@ -112,17 +109,11 @@ function toggleAllClickHandler(component, markAllComplete) {
         data: {
             todos: todos,
             markAllComplete: !markAllComplete,
-            numTodos: lastAddEvent.data.todos.length
+            numTodos: todos.length
         }
     };
 
     component.publish(toggleAllEvent);
-}
-
-function updateDom(container, newVnode) {
-    "use strict";
-
-    return patch(container, newVnode);
 }
 
 export default class TodoContainerComponent {
@@ -155,7 +146,7 @@ export default class TodoContainerComponent {
 
     render(state) {
         const newVnode = view(state, this);
-        this.container = updateDom(this.container, newVnode);
+        this.container = patch(this.container, newVnode);
 
         return this.container;
     }
@@ -168,13 +159,11 @@ export default class TodoContainerComponent {
         return events.reduce(function(state, event){
             state.todos = event.data.todos;
 
-            if(event.topic === 'todo.add') {
+            if(event.topic === 'todo.add' || event.topic === 'todo.toggle') {
                 return state;
             } else if(event.topic === 'todo.toggle.all') {
                 state.markAllComplete = event.data.markAllComplete;
 
-                return state;
-            } else if (event.topic === 'todo.toggle') {
                 return state;
             }
         }, {

@@ -76,37 +76,12 @@ export default class TodoContainerFooter {
     reduce(events) {
         return events.reduce(function(state, event){
             if(event.topic === 'todo.add') {
-                state.todoCount += 1;
+                state.itemsLeft += 1;
 
                 return state;
-            } else if(event.topic === 'todo.toggle') {
-                if(event.data.completed) {
-                    state.todoCount -= 1;
-                    state.numComplete += 1;
-
-                    return state;
-                } else if (!event.data.completed) {
-                    state.todoCount += 1;
-                    state.numComplete -= 1;
-
-                    return state;
-                }
-            } else if(event.topic === 'todo.toggle.all') {
-                if(event.data.markAllComplete) {
-                    state.todoCount = 0;
-                    state.numComplete = 1;
-
-                    return state;
-                } else {
-                    state.todoCount = event.data.numTodos;
-                    state.numComplete = 0;
-
-                    return state;
-                }
             }
         }, {
-            todoCount: 0,
-            numComplete: 0
+            itemsLeft: 0
         });
     }
 }
