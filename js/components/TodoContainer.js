@@ -20,7 +20,7 @@ function view(state, component) {
     let liNodes = state.todos.map( (todo) => {
         return h('li', {attrs: {id: todo.id}, class: {completed: todo.completed}}, [
             h('div.view', [
-                h('input.toggle', {attrs: {type: 'checkbox', checked: todo.completed}, on: {click: toggleTodoClickHandler.bind(null, component, todo.id, !todo.completed)}}),
+                h('input.toggle', {attrs: {type: 'checkbox', checked: todo.completed}, on: {click: toggleTodoClickHandler.bind(null, component, todo.id, todo.completed)}}),
                 h('label', todo.content),
                 h('button.destroy')
             ])
@@ -46,7 +46,7 @@ function toggleTodoClickHandler(component, id, completed) {
     if(lastToggleEvent){
         todos = lastToggleEvent.data.todos.map( (todo) => {
             if(todo.id === id) {
-                todo.completed = completed;
+                todo.completed = !completed;
             }
 
             return todo;
@@ -58,7 +58,7 @@ function toggleTodoClickHandler(component, id, completed) {
 
         todos = lastAddEvent.data.todos.map( (todo) => {
             if(todo.id === id) {
-                todo.completed = completed;
+                todo.completed = !completed;
             }
 
             return todo;
@@ -67,7 +67,7 @@ function toggleTodoClickHandler(component, id, completed) {
 
     let todoToggleEvent;
 
-    if(completed) {
+    if(!completed === true) {
         todoToggleEvent = {
             channel: "sync",
             topic: `todo.toggle.complete`,
