@@ -121,16 +121,33 @@ function toggleAllClickHandler(component, markAllComplete) {
         };
     });
 
-    let toggleAllEvent = {
-        channel: "sync",
-        topic: 'todo.toggle.all',
-        eventType: 'click',
-        data: {
-            todos: todos,
-            markAllComplete: !markAllComplete,
-            numTodos: todos.length
+    let toggleAllEvent;
+
+    if(!markAllComplete === true) {
+        toggleAllEvent = {
+            channel: "sync",
+            topic: 'todo.toggle.all.complete',
+            eventType: 'click',
+            data: {
+                todos: todos,
+                markAllComplete: !markAllComplete,
+                itemsLeft: 0,
+                completedItems: todos.length
+            }
         }
-    };
+    } else {
+        toggleAllEvent = {
+            channel: "sync",
+            topic: 'todo.toggle.all.incomplete',
+            eventType: 'click',
+            data: {
+                todos: todos,
+                markAllComplete: !markAllComplete,
+                itemsLeft: todos.length,
+                completedItems: 0
+            }
+        }
+    }
 
     component.publish(toggleAllEvent);
 }
@@ -180,7 +197,7 @@ export default class TodoContainerComponent {
 
             if(event.topic === 'todo.add' || event.topic === 'todo.toggle') {
                 return state;
-            } else if(event.topic === 'todo.toggle.all') {
+            } else if(event.topic === 'todo.toggle.all.complete' || event.topic === 'todo.toggle.all.incomplete') {
                 state.markAllComplete = event.data.markAllComplete;
 
                 return state;

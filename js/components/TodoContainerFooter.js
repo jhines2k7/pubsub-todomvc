@@ -89,8 +89,11 @@ export default class TodoContainerFooter {
                 state.itemsLeft += event.data.itemsLeft;
 
                 return state;
-            } else if(event.topic === 'toggle.all') {
+            } else if(event.topic === 'todo.toggle.all.complete' || event.topic === 'todo.toggle.all.incomplete') {
+                state.completedItems = event.data.completedItems;
+                state.itemsLeft = event.data.itemsLeft;
 
+                return state;
             }
         }, {
             itemsLeft: 0,
