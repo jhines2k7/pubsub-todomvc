@@ -29,16 +29,15 @@ function view(state, component) {
 
     return h('section.main', [
         h('input.toggle-all', {attrs: {type: 'checkbox'}}),
-        h('label', {attrs: {for: 'toggle-all'}, on: {click: toggleAllClickHandler.bind(null, component, state.markAllComplete)}}, 'Mark all as complete'),
+        h('label', {attrs: {for: 'toggle-all'}, on: {click: toggleAllClickHandler.bind(null, component)}}, 'Mark all as complete'),
         h('ul.todo-list', liNodes)
     ]);
 }
 
 function toggleTodoClickHandler(component, id, completed) {
     "use strict";
-    console.log(component.eventStore.events);
     let lastToggleEvent = component.eventStore.events.filter( (event) => {
-        return event.topic === 'todo.toggle';
+        return event.topic === 'todo.add' || event.topic === 'todo.toggle' || event.topic === 'todo.toggle.all';
     }).pop();
 
     let todos = [];
@@ -56,6 +55,8 @@ function toggleTodoClickHandler(component, id, completed) {
             return event.topic === 'todo.add';
         }).pop();
 
+        log("INFO", lastAddEvent);
+
         todos = lastAddEvent.data.todos.map( (todo) => {
             if(todo.id === id) {
                 todo.completed = !completed;
@@ -65,99 +66,55 @@ function toggleTodoClickHandler(component, id, completed) {
         });
     }
 
-    let todoToggleEvent;
-
-    if(!completed === true) {
-        todoToggleEvent = {
-            channel: "sync",
-            topic: `todo.toggle.complete`,
-            eventType: 'click',
-            data: {
-                todos: todos,
-                completedItems: 1,
-                itemsLeft: -1
-            }
-        };
-
-        component.publish([todoToggleEvent]);
-    } else {
-        todoToggleEvent = {
-            channel: "sync",
-            topic: `todo.toggle.incomplete`,
-            eventType: 'click',
-            data: {
-                todos: todos,
-                completedItems: -1,
-                itemsLeft: 1
-            }
-        };
-
-        component.publish(todoToggleEvent);
-    }
-
-    /*let toggleCompleteEvent = {
+    let todoToggleEvent = {
         channel: "sync",
-        topic: 'todo.complete.toggled',
+        topic: `todo.toggle`,
         eventType: 'click',
         data: {
-            numTodos: todos.length,
-            completed: !completed
+            todos: todos,
+            completedItems: !completed === true ? 1 : -1,
+            itemsLeft: !completed === true ? -1 : 1
         }
-    };*/
+    };
+
+    component.publish(todoToggleEvent);
 }
 
-function toggleAllClickHandler(component, markAllComplete) {
+function toggleAllClickHandler(component) {
     "use strict";
 
-    let lastAddEvent = component.eventStore.events.filter( (event) => {
-        return event.topic === 'todo.add';
+    let lastTodoEvent = component.eventStore.events.filter( (event) => {
+        return event.topic === 'todo.add' || event.topic === 'todo.toggle' || event.topic === 'todo.toggle.all';
     }).pop();
 
-    let todos = [];
+    let atLeastOneIncomplete = lastTodoEvent.data.todos.find( (todo) => {
+        return todo.completed === false;
+    });
 
-    let toggleAllEvent;
+    let markAllComplete = false;
 
-    if(!markAllComplete === true) {
-        todos = lastAddEvent.data.todos.map( (todo) => {
-            return {
-                id: todo.id,
-                content: todo.content,
-                completed: true
-            };
-        });
-
-        toggleAllEvent = {
-            channel: "sync",
-            topic: 'todo.toggle.all.complete',
-            eventType: 'click',
-            data: {
-                todos: todos,
-                markAllComplete: true,
-                itemsLeft: 0,
-                completedItems: todos.length
-            }
-        }
-    } else {
-        todos = lastAddEvent.data.todos.map( (todo) => {
-            return {
-                id: todo.id,
-                content: todo.content,
-                completed: false
-            };
-        });
-
-        toggleAllEvent = {
-            channel: "sync",
-            topic: 'todo.toggle.all.incomplete',
-            eventType: 'click',
-            data: {
-                todos: todos,
-                markAllComplete: false,
-                itemsLeft: todos.length,
-                completedItems: 0
-            }
-        }
+    if(typeof atLeastOneIncomplete !== 'undefined') {
+        markAllComplete = true;
     }
+
+    let todos = lastTodoEvent.data.todos.map( (todo) => {
+        return {
+            id: todo.id,
+            content: todo.content,
+            completed: markAllComplete
+        };
+    });
+
+    let toggleAllEvent = {
+        channel: "sync",
+        topic: 'todo.toggle.all',
+        eventType: 'click',
+        data: {
+            todos: todos,
+            itemsLeft: markAllComplete === true ? 0 : todos.length,
+            completedItems: markAllComplete === true ? todos.length : 0
+        }
+    };
 
     component.publish(toggleAllEvent);
 }
@@ -205,18 +162,9 @@ export default class TodoContainerComponent {
         return events.reduce(function(state, event){
             state.todos = event.data.todos;
 
-            if(event.topic === 'todo.add' || event.topic === 'todo.toggle') {
-                return state;
-            } else if(event.topic === 'todo.toggle.all.complete' || event.topic === 'todo.toggle.all.incomplete') {
-                state.markAllComplete = event.data.markAllComplete;
-
-                return state;
-            } else if(event.topic === 'todo.toggle.complete' || event.topic === 'todo.toggle.incomplete') {
-                return state;
-            }
+            return state;
         }, {
-            todos: [],
-            markAllComplete: false
+            todos: []
         });
     }
 }
